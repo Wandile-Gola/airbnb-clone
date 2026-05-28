@@ -2,10 +2,29 @@ const express = require("express");
 
 const router = express.Router();
 
-const { createAccommodation, getAccomodations } = require("../controllers/accommodationController");
-const { protect } = require("../middleware/authMiddleware");
+const {
+  createAccommodation,
+  getAccommodations,
+  getAccommodationById,
+  updateAccommodation,
+  deleteAccommodation,
+} = require("../controllers/accommodationController");
 
-router.post("/", protect, createAccommodation);
-router.get("/", protect, getAccommodations);
+const { protect } = require("../middleware/auth");
 
-module.export = router;
+
+// GET ALL + CREATE
+router
+  .route("/")
+  .get(getAccommodations)
+  .post(protect, createAccommodation);
+
+
+// GET ONE + UPDATE + DELETE
+router
+  .route("/:id")
+  .get(getAccommodationById)
+  .put(protect, updateAccommodation)
+  .delete(protect, deleteAccommodation);
+
+module.exports = router;
