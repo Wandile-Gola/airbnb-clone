@@ -79,9 +79,20 @@ const accommodationSchema = mongoose.Schema(
       default: 0,
     },
 
+    averageRating: {
+      type: Number,
+      default: 0,
+    },
+
+    numReviews: {
+      type: Number,
+      default: 0,
+    },
+
     host: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
+      required: true,
     },
   },
   {

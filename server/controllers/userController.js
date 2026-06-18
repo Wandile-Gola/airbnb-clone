@@ -2,6 +2,13 @@ const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
+const isStrongPassword = (password) => {
+  const minLength = password.length >= 8;
+  const hasNumber = /\d/.test(password);
+  const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+  return minLength && hasNumber && hasSpecialChar;
+};
 
 // GENERATE JWT
 const generateToken = (id) => {
@@ -30,6 +37,12 @@ const registerUser = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, salt);
 
+    if (!isStrongPassword(password)) {
+      return res.status(400).json({
+        message:
+          "Password must be 8+ characters, include a number and a special character",
+      });
+    }
     // CREATE USER
     const user = await User.create({
       username,

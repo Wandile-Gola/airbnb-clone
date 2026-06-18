@@ -1,6 +1,8 @@
 import { useState } from "react";
+
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+
+import { useNavigate, Link } from "react-router-dom";
 
 function LoginPage() {
 
@@ -13,7 +15,6 @@ function LoginPage() {
   const [error, setError] = useState("");
 
   const [loading, setLoading] = useState(false);
-
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -32,6 +33,7 @@ function LoginPage() {
         }
       );
 
+    
       // SAVE USER TO LOCAL STORAGE
       localStorage.setItem(
         "userInfo",
@@ -39,7 +41,7 @@ function LoginPage() {
       );
 
       // REDIRECT
-      navigate("/admin");
+      navigate("/");
 
     } catch (error) {
 
@@ -55,7 +57,7 @@ function LoginPage() {
 
 
   return (
-    <div className="login-page">
+    <div className="login-page container">
 
       <form
         className="login-form"
@@ -89,6 +91,11 @@ function LoginPage() {
           }
           required
         />
+
+        <p className="auth-switch">
+          Don't have an account?{" "}
+          <Link to="/register">Register</Link>
+        </p>
 
         <button type="submit">
 

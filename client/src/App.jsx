@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { WishlistProvider, useWishlist } from "./context/WishlistContext";
 
 import Header from "./components/Header";
+import Footer from "./components/Footer";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 import HostReservationsPage from "./pages/HostReservationsPage";
@@ -14,73 +16,90 @@ import AdminDashboard from "./pages/AdminDashboard";
 import CreateListingPage from "./pages/CreateListingPage";
 import EditListingPage from "./pages/EditListingPage";
 import ReservationsPage from "./pages/ReservationsPage";
+import WishlistPage from "./pages/WishlistPage";
 
 function App() {
   return (
-    <BrowserRouter>
+    <WishlistProvider>
+      <BrowserRouter>
+        <AppContent />
+      </BrowserRouter>
+    </WishlistProvider>
+  );
+}
+
+function AppContent() {
+  const { message } = useWishlist();
+
+  return (
+    <div className="app-wrapper">
       <Header />
-      <Routes>
 
-        <Route path="/" element={<HomePage />} />
+      {message && (
+        <div className="global-message">
+          {message}
+        </div>
+      )}
 
-        <Route path="/login" element={<LoginPage />} />
+      <main className="app-content">
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/listings" element={<ListingsPage />} />
+          <Route path="/wishlist" element={<WishlistPage />} />
+          <Route path="/listings/:id" element={<ListingDetailsPage />} />
 
-        <Route path="/register" element={<RegisterPage />} />
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute>
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route path="/listings" element={<ListingsPage />} />
+          <Route
+            path="/admin/create"
+            element={
+              <ProtectedRoute>
+                <CreateListingPage />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="/listings/:id"
-          element={<ListingDetailsPage />}
-        />
+          <Route
+            path="/admin/edit/:id"
+            element={
+              <ProtectedRoute>
+                <EditListingPage />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="/admin"
-          element={
-            <ProtectedRoute>
-              <AdminDashboard />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/reservations"
+            element={
+              <ProtectedRoute>
+                <ReservationsPage />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="/admin/create"
-          element={
-            <ProtectedRoute>
-              <CreateListingPage />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/host/reservations"
+            element={
+              <ProtectedRoute>
+                <HostReservationsPage />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
 
-        <Route
-          path="/admin/edit/:id"
-          element={
-            <ProtectedRoute>
-              <EditListingPage />
-            </ProtectedRoute>
-          }
-        />
+      </main>
 
-        <Route
-          path="/reservations"
-          element={
-            <ProtectedRoute>
-              <ReservationsPage />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/host/reservations"
-          element={
-            <ProtectedRoute>
-              <HostReservationsPage />
-            </ProtectedRoute>
-          }
-        />
-
-      </Routes>
-    </BrowserRouter>
+      <Footer />
+    </div>
   );
 }
 

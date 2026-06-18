@@ -90,7 +90,7 @@ function AdminDashboard() {
 
   return (
 
-    <div className="dashboard-page">
+    <div className="dashboard-page container">
 
       <div className="dashboard-header">
 
@@ -129,7 +129,10 @@ function AdminDashboard() {
 
               <p>{listing.location}</p>
 
-              <h4>R {listing.price}</h4>
+              <h4>
+                R {listing.price}
+                <span> / night</span>
+              </h4>
 
             </div>
 

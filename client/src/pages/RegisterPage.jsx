@@ -18,15 +18,32 @@ function RegisterPage() {
 
   const [loading, setLoading] = useState(false);
 
+  const isStrongPassword = (password) => {
+    const minLength = password.length >= 8;
+    const hasNumber = /\d/.test(password);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+    return minLength && hasNumber && hasSpecialChar;
+  };
+
 
   const submitHandler = async (e) => {
     e.preventDefault();
+
+    if (!isStrongPassword(password)) {
+      setError(
+        "Password must be 8+ characters, include a number and a special character"
+      );
+      return;
+    }
 
     try {
 
       setLoading(true);
 
       setError("");
+
+
 
       const { data } = await axios.post(
         "http://127.0.0.1:5000/api/users/register",
@@ -43,7 +60,7 @@ function RegisterPage() {
         JSON.stringify(data)
       );
 
-      navigate("/admin");
+      navigate("/");
 
     } catch (error) {
 
@@ -59,7 +76,7 @@ function RegisterPage() {
 
 
   return (
-    <div className="login-page">
+    <div className="login-page container">
 
       <form
         className="login-form"
@@ -119,12 +136,8 @@ function RegisterPage() {
           </option>
         </select>
 
-        <button type="submit">
-
-          {loading
-            ? "Loading..."
-            : "Register"}
-
+        <button type="submit" disabled={!isStrongPassword(password) || loading}>
+          {loading ? "Loading..." : "Register"}
         </button>
 
       </form>

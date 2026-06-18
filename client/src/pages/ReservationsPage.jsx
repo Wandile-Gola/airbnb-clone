@@ -109,21 +109,48 @@ function ReservationsPage() {
 
   return (
 
-    <div className="reservations-page">
+    <div className="reservations-page container">
 
       <h1>My Reservations</h1>
 
 
       {reservations.length === 0 ? (
 
-        <p>No reservations found.</p>
+        <div className="empty-state">
+
+        <h2>No trips yet</h2>
+
+        <p>
+          Start exploring and book your
+          first stay.
+        </p>
+
+      </div>
 
       ) : (
 
         <div className="reservations-grid">
 
-          {reservations.map(
-            (reservation) => (
+          {reservations.map((reservation) => {
+
+            const nights =
+              Math.ceil(
+                (
+                  new Date(
+                    reservation.checkOut
+                  ) -
+                  new Date(
+                    reservation.checkIn
+                  )
+                ) /
+                (1000 * 60 * 60 * 24)
+              );
+
+              const totalPrice =
+                nights *
+                reservation.accommodation?.price;
+
+            return (
 
             <div
               key={reservation._id}
@@ -159,25 +186,44 @@ function ReservationsPage() {
                     .accommodation
                     ?.location
                   }
-                </p>
+                </p>              
 
-                <p>
-                  Check In:
-                  {" "}
-                  {reservation.checkIn}
-                </p>
+                <div className="trip-details">
 
-                <p>
-                  Check Out:
-                  {" "}
-                  {reservation.checkOut}
-                </p>
+                  <p>
+                    📅 Check In:
+                    {" "}
+                    {new Date(
+                      reservation.checkIn
+                    ).toLocaleDateString()}
+                  </p>
 
-                <p>
-                  Guests:
-                  {" "}
-                  {reservation.guests}
-                </p>
+                  <p>
+                    📅 Check Out:
+                    {" "}
+                    {new Date(
+                      reservation.checkOut
+                    ).toLocaleDateString()}
+                  </p>
+
+                  <p>
+                    👥 Guests:
+                    {" "}
+                    {reservation.guests}
+                  </p>
+
+                  <p>
+                     🌙 {nights} night
+                     {nights > 1 ? "s" : ""}
+                  </p>
+
+                  <p>
+                    💰 Total:
+                    {" "}
+                    R {totalPrice}
+                  </p>
+
+                </div>
 
 
                 <button
@@ -194,7 +240,8 @@ function ReservationsPage() {
 
             </div>
 
-          ))}
+          );
+          })}
 
         </div>
 

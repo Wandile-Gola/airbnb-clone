@@ -1,100 +1,244 @@
 import "./Header.css";
+import { useEffect, useState, useRef, } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 function Header() {
+
   const navigate = useNavigate();
-  
+
+  const [search, setSearch] =
+    useState("");
+
+  const [showMenu, setShowMenu] =
+    useState(false);
+
+  const menuRef = useRef(null);
+
   const userInfo = JSON.parse(
-
     localStorage.getItem("userInfo")
-    );
+  );
 
-    const logoutHandler = () => {
+  const logoutHandler = () => {
     localStorage.removeItem("userInfo");
-
     navigate("/login");
+  };
+
+
+  useEffect(() => {
+
+    const handleClickOutside = (
+      event
+    ) => {
+
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(
+          event.target
+        )
+      ) {
+        setShowMenu(false);
+      }
+
     };
 
+    document.addEventListener(
+      "mousedown",
+      handleClickOutside
+    );
+
+    return () => {
+
+      document.removeEventListener(
+        "mousedown",
+        handleClickOutside
+      );
+
+    };
+
+  }, []);
+
   return (
+    <>
     <header className="header">
 
-      {/* LEFT */}
-      <div className="header__left">
+      <div className="header-left">
         <Link to="/" className="logo">
-          Airbnb
+          <span className="logo-icon">🏠</span>
+            NestAway
         </Link>
       </div>
 
+      <div className="header-center">
+        
+        <div className="airbnb-search">
 
-      {/* CENTER */}
-      <div className="header__center">
-        <input
-          type="text"
-          placeholder="Start your search"
-        />
+          <div className="search-section">
+
+            <span className="search-label">
+              Where
+            </span>
+
+            <input
+              type="text"
+              placeholder="Search destinations"
+              value={search}
+              onChange={(e) =>
+                setSearch(e.target.value)
+              }
+              onKeyDown={(e) => {
+
+                if (
+                  e.key === "Enter"
+                ) {
+
+                  navigate(
+                    `/listings?search=${search}`
+                  );
+
+                }
+
+              }}
+            />
+
+          </div>
+
+          <button
+            className="search-btn"
+            onClick={() =>
+              navigate(
+                `/listings?search=${search}`
+              )
+            }
+          >
+            🔍
+          </button>
+
+        </div>
       </div>
 
-
-      {/* RIGHT */}
-      <div className="header__right">
-
-        <Link to="/" className="nav-link">
-          Home
-        </Link>
-
-        <Link to="/listings" className="nav-link">
-          Listings
-        </Link>
-
-        <Link to="/reservations" className="nav-link">
-          Reservations
-        </Link>
-
-        <Link to="/admin" className="nav-link">
-          Dashboard
-        </Link>
+      <div className="header-right">
 
         <Link
-            to="/host/reservations"
-            className="nav-link">
-            Host Reservations
+          to="/register"
+          className="host-link"
+        >
+          Become a Host
         </Link>
 
-        <Link
-            to="/admin/create"
-            className="nav-link"
-            >
-            Create Listing
-        </Link>
+        <button className="globe-btn">
+          🌐
+        </button>
 
-        {userInfo ? (
-            <button
-                className="login-btn"
-                onClick={logoutHandler}
-            >
-                Logout
-            </button>
-            ) : (
-            <>
-                <Link
-                to="/login"
-                className="login-btn"
-                >
-                Login
-                </Link>
+        <div
+          className="profile-section"
+          ref={menuRef}
+        >
 
-                <Link
-                to="/register"
-                className="nav-link"
-                >
-                Register
-                </Link>
-            </>
-            )}
+          <div
+            className="profile-btn"
+            onClick={() =>
+              setShowMenu(
+                (prev) => !prev
+              )
+            }
+          >
+            ☰ 👤
+          </div>
+
+          {showMenu && (
+
+            <div className="dropdown-menu">
+
+              {userInfo ? (
+                <>
+
+                  <Link to="/reservations">
+                    My Reservations
+                  </Link>
+
+                  <Link to="/wishlist">
+                    My Wishlist
+                  </Link>
+
+                  {userInfo.role === "host" && (
+                    <>
+                      <Link to="/admin">
+                        Dashboard
+                      </Link>
+
+                      <Link to="/admin/create">
+                        Create Listing
+                      </Link>
+
+                      <Link to="/host/reservations">
+                        Host Reservations
+                      </Link>
+                    </>
+                  )}
+
+                  <hr />
+
+                  <button
+                    onClick={logoutHandler}
+                  >
+                    Logout
+                  </button>
+
+                </>
+              ) : (
+                <>
+
+                  <Link to="/login">
+                    Login
+                  </Link>
+
+                  <Link to="/register">
+                    Register
+                  </Link>
+
+                </>
+              )}
+
+            </div>
+
+          )}
+
+        </div>
 
       </div>
 
     </header>
+
+    <div className="header-categories">
+
+      <Link to="/listings">
+        🏠 All
+      </Link>
+
+      <Link to="/listings?type=Beach">
+        🏝️ Beach
+      </Link>
+
+      <Link to="/listings?type=Cabin">
+        🏡 Cabin
+        </Link>
+
+      <Link to="/listings?type=Apartment">
+        🏢 Apartment
+      </Link>
+
+      <Link to="/listings?type=Student Housing">
+        🎓 Student Housing
+      </Link>
+
+      <Link to="/listings?type=Luxury">
+        💎 Luxury
+      </Link>
+
+    </div>
+
+  </>
+
   );
 }
 

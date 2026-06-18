@@ -72,7 +72,7 @@ function HostReservationsPage() {
 
   return (
 
-    <div className="reservations-page">
+    <div className="reservations-page container">
 
       <h1>Host Reservations</h1>
 

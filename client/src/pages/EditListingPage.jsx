@@ -33,7 +33,8 @@ function EditListingPage() {
 
   const [type, setType] = useState("");
 
-  const [image, setImage] = useState("");
+  const [images, setImages] = useState([]);
+  const [newImages, setNewImages] = useState([]);
 
   const [guests, setGuests] = useState("");
 
@@ -75,7 +76,7 @@ function EditListingPage() {
 
         setBathrooms(data.bathrooms);
 
-        setImage(data.images?.[0] || "");
+        setImages(data.images || []);
 
       } catch (error) {
 
@@ -91,12 +92,50 @@ function EditListingPage() {
 
   }, [id]);
 
+  const uploadImages = async () => {
+
+    const formData = new FormData();
+
+    newImages.forEach((image) => {
+      formData.append("images", image);
+    });
+
+    const { data } = await axios.post(
+      "http://127.0.0.1:5000/api/upload",
+      formData
+    );
+
+    return data;
+  };
+
+  const removeImage = (indexToRemove) => {
+
+    setImages(
+      images.filter(
+        (_, index) =>
+          index !== indexToRemove
+      )
+    );
+  };
 
   const submitHandler = async (e) => {
 
     e.preventDefault();
 
     try {
+
+      let uploadedImages = images;
+
+      if (newImages.length > 0) {
+
+        const cloudinaryImages =
+          await uploadImages();
+
+        uploadedImages = [
+          ...images,
+          ...cloudinaryImages,
+        ];
+      }
 
       await axios.put(
 
@@ -111,7 +150,7 @@ function EditListingPage() {
           guests,
           bedrooms,
           bathrooms,
-          images: [image],
+          images: uploadedImages,
         },
 
         {
@@ -138,7 +177,7 @@ function EditListingPage() {
 
   return (
 
-    <div className="create-page">
+    <div className="create-page container">
 
       <form
         className="create-form"
@@ -193,24 +232,83 @@ function EditListingPage() {
         />
 
 
-        <input
-          type="text"
-          placeholder="Type"
+        <select
           value={type}
           onChange={(e) =>
             setType(e.target.value)
           }
-        />
+        >
 
+          <option value="Apartment">
+            Apartment
+          </option>
 
-        <input
-          type="text"
-          placeholder="Image URL"
-          value={image}
-          onChange={(e) =>
-            setImage(e.target.value)
-          }
-        />
+          <option value="Cabin">
+            Cabin
+          </option>
+
+          <option value="Beach">
+            Beach
+          </option>
+
+          <option value="Luxury">
+            Luxury
+          </option>
+
+          <option value="Student Housing">
+            Student Housing
+          </option>
+
+        </select>
+
+        <div className="image-preview-grid">
+
+          {images.map((image, index) => (
+
+            <div
+              key={index}
+              className="image-preview-card"
+            >
+
+              <img
+                src={image}
+                alt={`Preview ${index}`}
+              />
+
+              <button
+                type="button"
+                className="remove-image-btn"
+                onClick={() =>
+                  removeImage(index)
+                }
+              >
+                ✕
+              </button>
+
+            </div>
+
+          ))}
+
+        </div>
+
+        <div className="image-upload-box">
+
+          <input
+            type="file"
+            multiple
+            accept="image/*"
+            onChange={(e) =>
+              setNewImages(
+                Array.from(e.target.files)
+              )
+            }
+          />
+
+          <p>
+            {newImages.length} image(s) selected
+          </p>
+
+        </div>
 
 
         <input

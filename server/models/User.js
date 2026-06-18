@@ -23,10 +23,20 @@ const userSchema = mongoose.Schema(
       enum: ["user", "host", "admin"],
       default: "user",
     },
+
+    wishlist: [
+    {
+      listingId: String,
+      title: String,
+      image: String,
+      price: Number
+    }
+  ],
   },
   {
     timestamps: true,
   }
+  
 );
 
 const User = mongoose.model("User", userSchema);

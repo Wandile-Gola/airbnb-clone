@@ -18,10 +18,16 @@ app.use(express.json());
 const userRoutes = require("./routes/userRoutes");
 const accommodationRoutes = require("./routes/accommodationRoutes");
 const reservationRoutes = require("./routes/reservationRoutes");
+const reviewRoutes = require("./routes/reviewRoutes");
+const uploadRoutes = require("./routes/uploadRoutes");
+const wishlistRoutes = require("./routes/wishlistRoutes");
 
 app.use("/api/users", userRoutes);
 app.use("/api/accommodations", accommodationRoutes);
 app.use("/api/reservations", reservationRoutes);
+app.use("/api/reviews", reviewRoutes);
+app.use("/api/upload", uploadRoutes);
+app.use("/api/wishlist", wishlistRoutes);
 
 
 app.get("/", (req, res) => {

@@ -35,21 +35,19 @@ const getAccommodations = async (req, res) => {
 };
 
 const getAccommodationById = async (req, res) => {
-  try {
-    const accommodation = await Accommodation.findById(req.params.id);
+  const accommodation =
+    await Accommodation.findById(
+      req.params.id
+    ).populate(
+      "host",
+      "username email"
+    );
 
-    if (!accommodation) {
-      return res.status(404).json({
-        message: "Accommodation not found",
-      });
-    }
-
+  if (accommodation) {
     res.json(accommodation);
-
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
+  } else {
+    res.status(404);
+    throw new Error("Accommodation not found");
   }
 };
 

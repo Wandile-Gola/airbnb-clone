@@ -24,7 +24,7 @@ function CreateListingPage() {
 
   const [type, setType] = useState("");
 
-  const [image, setImage] = useState("");
+  const [images, setImages] = useState([]);
 
   const [guests, setGuests] = useState("");
 
@@ -32,10 +32,44 @@ function CreateListingPage() {
 
   const [bathrooms, setBathrooms] = useState("");
 
+  const [amenities, setAmenities] = useState([]);
+
   const [error, setError] = useState("");
 
   const [loading, setLoading] = useState(false);
 
+  const handleAmenityChange = (amenity) => {
+    if (amenities.includes(amenity)) {
+      setAmenities(
+        amenities.filter((a) => a !== amenity)
+      );
+    }
+      else {
+      setAmenities([...amenities, amenity]);
+    }
+  };
+
+  const uploadImages =
+    async () => {
+
+      const formData =
+        new FormData();
+
+      images.forEach((image) => {
+        formData.append(
+          "images",
+          image
+        );
+      });
+
+      const { data } =
+        await axios.post(
+          "http://127.0.0.1:5000/api/upload",
+          formData
+        );
+
+    return data;
+  };
 
   const submitHandler = async (e) => {
 
@@ -47,6 +81,8 @@ function CreateListingPage() {
 
       setError("");
 
+      const uploadedImages = await uploadImages();
+
       await axios.post(
         "http://127.0.0.1:5000/api/accommodations",
 
@@ -56,13 +92,13 @@ function CreateListingPage() {
           description,
           price,
           type,
+          amenities,
           guests,
           bedrooms,
           bathrooms,
 
-          images: [image],
+          images: uploadedImages,
         },
-
         {
           headers: {
             Authorization: `Bearer ${userInfo.token}`,
@@ -88,7 +124,7 @@ function CreateListingPage() {
 
   return (
 
-    <div className="create-page">
+    <div className="create-page container">
 
       <form
         className="create-form"
@@ -125,7 +161,6 @@ function CreateListingPage() {
           required
         />
 
-
         <textarea
           placeholder="Description"
           value={description}
@@ -147,27 +182,58 @@ function CreateListingPage() {
         />
 
 
-        <input
-          type="text"
-          placeholder="Accommodation Type"
+        <select
           value={type}
           onChange={(e) =>
             setType(e.target.value)
           }
           required
-        />
+        >
 
+          <option value="">
+            Select Type
+          </option>
+
+          <option value="Apartment">
+            Apartment
+          </option>
+
+          <option value="Cabin">
+            Cabin
+          </option>
+
+          <option value="Beach">
+            Beach
+          </option>
+
+          <option value="Luxury">
+            Luxury
+          </option>
+
+          <option value="Student Housing">
+            Student Housing
+          </option>
+
+        </select>
+
+      <div className="image-upload-box">
 
         <input
-          type="text"
-          placeholder="Image URL"
-          value={image}
+          type="file"
+          multiple
+          accept="image/*"
           onChange={(e) =>
-            setImage(e.target.value)
+            setImages(
+              Array.from(e.target.files)
+            )
           }
-          required
         />
 
+        <p>
+          {images.length} image(s) selected
+        </p>
+        
+      </div>
 
         <input
           type="number"
@@ -201,7 +267,61 @@ function CreateListingPage() {
           required
         />
 
+      <div className="amenities-group">
 
+        <h3>Amenities</h3>
+
+          <label>
+            <input
+              type="checkbox"
+              onChange={() =>
+                handleAmenityChange("WiFi")
+              }
+            />
+            WiFi
+          </label>
+
+          <label>
+            <input
+              type="checkbox"
+              onChange={() =>
+                handleAmenityChange("Parking")
+              }
+            />
+            Parking
+          </label>
+
+          <label>
+            <input
+              type="checkbox"
+              onChange={() =>
+                handleAmenityChange("Kitchen")
+              }
+            />
+            Kitchen
+          </label>
+
+          <label>
+            <input
+              type="checkbox"
+              onChange={() =>
+                handleAmenityChange("Workspace")
+              }
+            />
+            Workspace
+          </label>
+
+          <label>
+            <input
+              type="checkbox"
+              onChange={() =>
+                handleAmenityChange("Pool")
+              }
+            />
+            Pool
+          </label>
+
+      </div>
         <button type="submit">
 
           {loading
