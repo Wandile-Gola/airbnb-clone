@@ -26,7 +26,7 @@ useEffect(() => {
       setLoading(true);
 
       const { data } = await axios.get(
-        "http://127.0.0.1:5000/api/accommodations",
+        "https://nestaway-88b31453dcd5.herokuapp.com/api/accommodations",
         {
           params: search ? { search } : {}
         }

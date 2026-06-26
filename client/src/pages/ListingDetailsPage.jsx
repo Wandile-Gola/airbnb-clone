@@ -96,7 +96,7 @@ function ListingDetailsPage() {
 
       await axios.post(
 
-        "http://127.0.0.1:5000/api/reservations",
+        "https://nestaway-88b31453dcd5.herokuapp.com/api/reservations",
 
         {
           accommodation: listing._id,
@@ -136,7 +136,7 @@ function ListingDetailsPage() {
       }
 
       await axios.post(
-        "http://127.0.0.1:5000/api/reviews",
+        "https://nestaway-88b31453dcd5.herokuapp.com/api/reviews",
         {
           accommodation: listing._id,
           rating,

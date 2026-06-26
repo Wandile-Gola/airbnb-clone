@@ -57,7 +57,7 @@ function EditListingPage() {
       try {
 
         const { data } = await axios.get(
-          `http://127.0.0.1:5000/api/accommodations/${id}`
+          `https://nestaway-88b31453dcd5.herokuapp.com/api/accommodations/${id}`
         );
 
         setTitle(data.title);
@@ -101,7 +101,7 @@ function EditListingPage() {
     });
 
     const { data } = await axios.post(
-      "http://127.0.0.1:5000/api/upload",
+      "https://nestaway-88b31453dcd5.herokuapp.com/api/upload",
       formData
     );
 
@@ -139,7 +139,7 @@ function EditListingPage() {
 
       await axios.put(
 
-        `http://127.0.0.1:5000/api/accommodations/${id}`,
+        `https://nestaway-88b31453dcd5.herokuapp.com/api/accommodations/${id}`,
 
         {
           title,

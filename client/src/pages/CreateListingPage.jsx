@@ -64,7 +64,7 @@ function CreateListingPage() {
 
       const { data } =
         await axios.post(
-          "http://127.0.0.1:5000/api/upload",
+          "https://nestaway-88b31453dcd5.herokuapp.com/api/upload",
           formData
         );
 
@@ -84,7 +84,7 @@ function CreateListingPage() {
       const uploadedImages = await uploadImages();
 
       await axios.post(
-        "http://127.0.0.1:5000/api/accommodations",
+        "https://nestaway-88b31453dcd5.herokuapp.com/api/accommodations",
 
         {
           title,

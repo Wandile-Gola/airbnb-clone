@@ -14,7 +14,7 @@ function WishlistPage() {
 
       try {
         const res = await axios.get(
-          `http://localhost:5000/api/wishlist/${user._id}`
+          `https://nestaway-88b31453dcd5.herokuapp.com/api/wishlist/${user._id}`
         );
 
 

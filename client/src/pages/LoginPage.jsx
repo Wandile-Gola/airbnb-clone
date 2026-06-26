@@ -26,7 +26,7 @@ function LoginPage() {
       setError("");
 
       const { data } = await axios.post(
-        "http://localhost:5000/api/users/login",
+        "https://nestaway-88b31453dcd5.herokuapp.com/api/users/login",
         {
           email,
           password,
