@@ -74,7 +74,7 @@ function ListingDetailsPage() {
   const fetchReviews = async () => {
 
     const { data } = await axios.get(
-      `http://127.0.0.1:5000/api/reviews/accommodation/${id}`
+      `https://nestaway-88b31453dcd5.herokuapp.com/api/reviews/accommodation/${id}`
     );
 
     setReviews(data);
